@@ -13,11 +13,6 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 def ping_pong():
     return jsonify('pong!')
 
-@app.route('/results',methods=['GET'])
-def display_skyscanner_response():
-    print(data(flightSearchForm))
-    return data(flightSearchForm)
-
 @app.route('/search',methods=['POST'])
 def get_search():
     post_data = request.get_json()
@@ -26,12 +21,16 @@ def get_search():
         'departure': post_data.get('departure'),
         'destination': post_data.get('destination'),
         'departureDate': post_data.get('departureDate'),
-        'returnDate': post_data.get('returnDate')
+        # 'returnDate': post_data.get('returnDate')
     })
     app.logger.debug("flightSearchForm: %s", flightSearchForm) 
 
     return jsonify(flightSearchForm)
 
+@app.route('/results',methods=['GET'])
+def display_skyscanner_response():
+    print("Getting Results")
+    return data(flightSearchForm)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,16 +12,45 @@
                 <form>
                     <input type="text" v-model="flightSearchForm.departure" placeholder="Departure city or airport" class="rounded-l-lg px-4 py-4">           
                     <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination city or airport">
-                    <input type="date" v-model="flightSearchForm.departureDate" class="px-4 py-4 ml-2" placeholder="Departure date">
-                    <input type="date" v-model="flightSearchForm.returnDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Return date">
-                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit">Search!</button>
+                    <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
+                    <!-- <input type="date" v-model="flightSearchForm.returnDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Return date"> -->
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults()">Search!</button>
                 </form> 
             </div>
             <br><br>
         </div>
-        <div class="container mx-auto px-8 mt-8 ">
+
+        <table class="min-w-full divide-y divide-gray-200">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Airline</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departure</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arrival</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Changes</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Link</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr v-for="(itinerary, itineraryId) in itineraries" :key="itineraryId">
+          <td class="px-6 py-4 whitespace-nowrap">'Airline XY'</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].departureDateTime)}}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].arrivalDateTime) }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].durationInMinutes }} mins</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].stopCount }}</td>
+          <td class="px-6 py-4 whitespace-nowrap font-semibold">{{ (itinerary.pricingOptions[0].price.amount / 1000).toFixed(2) }} EUR</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <button @click="openLink(itinerary.pricingOptions[0].items[0].deepLink)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check offer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="container mx-auto px-8 mt-8 ">
             <img src="https://images.pexels.com/photos/12993380/pexels-photo-12993380.jpeg" alt="Surf pic" class="rounded-3xl">
-        </div>
+    </div>
+
     </div>
 </template>
 
@@ -35,9 +64,12 @@ export default {
                 departure: '',
                 destination: '',
                 departureDate: '',
-                returnDate: '',
+                // returnDate: '',
             },
             searchResults: null,
+            itineraries: {},
+            legs: {},
+            formattedDate: '',
         }
     },
     methods: {
@@ -47,8 +79,6 @@ export default {
             axios.post(path, payload)
                 .then((res) => {
                     console.log('THIS WORKED');
-                    // this.searchResults = res.data;
-                    // console.log(this.searchResults)
                     this.getSearchData();
                 })
                 .catch((error) => {
@@ -73,9 +103,55 @@ export default {
                 departure: this.flightSearchForm.departure,
                 destination: this.flightSearchForm.destination,
                 departureDate: this.flightSearchForm.departureDate,
-                returnDate: this.flightSearchForm.returnDate,
+                // returnDate: this.flightSearchForm.returnDate,
             };
             this.addSearchData(payload);
+        },
+        getResults() {
+            setTimeout(() => {
+                const path = 'http://localhost:5000/results';
+                axios.get(path)
+                    .then((response) => {
+                    this.itineraries = response.data.content.results.itineraries;
+                    })
+                    .catch((error) => {
+                    console.error(error);
+                    });
+
+                axios.get(path)
+                .then((response) => {
+                    this.legs = response.data.content.results.legs;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+                console.log('Function executed after delay');
+            }, 1000);
+        },
+        
+        formatDatetimeFromObject(dateObject) {
+            try {
+                const year = dateObject.year;
+                const month = dateObject.month - 1; 
+                const day = dateObject.day;
+                const hour = dateObject.hour;
+                const minute = dateObject.minute;
+
+                const dt = new Date(year, month, day, hour, minute);
+
+                const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+                const formattedDate = dt.toLocaleString('de-DE', options);
+
+                return formattedDate;
+            } 
+            catch (error) {
+                console.error(`Error: ${error} key is missing in the object.`);
+                return null;
+            }
+        },
+
+        openLink(link) {
+            window.open(link, '_blank');
         },
     }
 };
