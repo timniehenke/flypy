@@ -17,7 +17,6 @@ def ping_pong():
 def get_search():
     global flightSearchForm
     post_data = request.get_json()
-    app.logger.debug("Received POST data: %s", post_data)
     if flightSearchForm == []:
         flightSearchForm.append({
             'departure': post_data.get('departure'),
@@ -31,12 +30,10 @@ def get_search():
             'destination': post_data.get('destination'),
             'departureDate': post_data.get('departureDate'),
         })
-    app.logger.debug("flightSearchForm: %s", flightSearchForm) 
     return jsonify(flightSearchForm)
 
 @app.route('/results',methods=['GET'])
 def display_skyscanner_response():
-    print("Getting Results")
     return data(flightSearchForm)
 
 if __name__ == '__main__':
