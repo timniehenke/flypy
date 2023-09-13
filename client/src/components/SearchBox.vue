@@ -11,14 +11,14 @@
             <br>   
             <div class="text-center">
                 <form>
-                    <input type="text" v-model="flightSearchForm.departure" placeholder="Departure city or airport" class="rounded-l-lg px-4 py-4">           
-                    <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination city or airport">
+                    <input type="text" v-model="flightSearchForm.departure" placeholder="Departure airport (IATA)" class="rounded-l-lg px-4 py-4">           
+                    <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination airport (IATA)">
                     <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
                     <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); toggleBodyContent();">Search!</button>
                 </form> 
             </div>
             <br>
-            <p class="text-center text-sm text-white">Please enter the Departure & Destination Airport as IATA Code, e.g. DUS (Düsseldorf). <br> A list can be found <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank">here</a>. </p>
+            <p class="text-center text-xs text-white">Please enter the Departure & Destination Airport as IATA Code, e.g. DUS (Düsseldorf). <br> A list can be found <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank">here</a>. </p>
             <br>
         </div>
 
