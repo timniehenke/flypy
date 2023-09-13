@@ -18,7 +18,7 @@
                 </form> 
             </div>
             <br>
-            <p class="text-center text-xs text-white">Please enter the Departure & Destination Airport as IATA Code, e.g. DUS (Düsseldorf). <br> A list can be found <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank">here</a>. </p>
+            <p class="text-center text-xs text-white">Please enter the Departure & Destination Airport as IATA Code, e.g. DUS (Düsseldorf). <br> IATA Codes are 3-letter-codes used to identify airports. A list can be found <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank">here</a>. </p>
             <br>
         </div>
 
