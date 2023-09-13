@@ -23,7 +23,7 @@
     <table v-if="showResults" class="min-w-full divide-y divide-gray-200">
       <thead>
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Airline</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operating Airline</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departure</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arrival</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
@@ -34,7 +34,7 @@
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
         <tr v-for="(itinerary, itineraryId) in itineraries" :key="itineraryId">
-          <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].operatingCarrierIds }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ carriers[legs[itineraryId].operatingCarrierIds[0]].name }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].departureDateTime)}}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].arrivalDateTime) }}</td>
           <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].durationInMinutes }} mins</td>
@@ -69,6 +69,7 @@ export default {
             searchResults: null,
             itineraries: {},
             legs: {},
+            carriers: {},
             formattedDate: '',
             showPicture: true,
             showResults: false,
@@ -114,19 +115,13 @@ export default {
                 const path = 'http://localhost:5000/results';
                 axios.get(path)
                     .then((response) => {
-                    this.itineraries = response.data.content.results.itineraries;
+                        this.itineraries = response.data.content.results.itineraries;
+                        this.legs = response.data.content.results.legs;
+                        this.carriers = response.data.content.results.carriers;
                     })
                     .catch((error) => {
-                    console.error(error);
+                        console.error(error);
                     });
-
-                axios.get(path)
-                .then((response) => {
-                    this.legs = response.data.content.results.legs;
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
                 console.log('Function executed after delay');
             }, 500);
         },
