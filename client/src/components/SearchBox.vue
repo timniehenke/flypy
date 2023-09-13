@@ -11,8 +11,8 @@
             <br>   
             <div class="text-center">
                 <form>
-                    <input type="text" v-model="flightSearchForm.departure" placeholder="Departure airport (IATA)" class="rounded-l-lg px-4 py-4">           
-                    <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination airport (IATA)">
+                    <input type="text" v-model="flightSearchForm.departure" placeholder="Departure airport (IATA)" class="rounded-l-lg px-4 py-4" maxlength="3">           
+                    <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination airport (IATA)" maxlength="3">
                     <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
                     <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); toggleBodyContent();">Search!</button>
                 </form> 
