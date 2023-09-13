@@ -15,16 +15,25 @@ def ping_pong():
 
 @app.route('/search',methods=['POST'])
 def get_search():
+    global flightSearchForm
     post_data = request.get_json()
     app.logger.debug("Received POST data: %s", post_data)
-    flightSearchForm.append({
-        'departure': post_data.get('departure'),
-        'destination': post_data.get('destination'),
-        'departureDate': post_data.get('departureDate'),
-        # 'returnDate': post_data.get('returnDate')
-    })
+    if flightSearchForm == []:
+        flightSearchForm.append({
+            'departure': post_data.get('departure'),
+            'destination': post_data.get('destination'),
+            'departureDate': post_data.get('departureDate'),
+            # 'returnDate': post_data.get('returnDate')
+        })
+    else:
+        flightSearchForm = []
+        flightSearchForm.append({
+            'departure': post_data.get('departure'),
+            'destination': post_data.get('destination'),
+            'departureDate': post_data.get('departureDate'),
+            # 'returnDate': post_data.get('returnDate')
+        })
     app.logger.debug("flightSearchForm: %s", flightSearchForm) 
-
     return jsonify(flightSearchForm)
 
 @app.route('/results',methods=['GET'])
