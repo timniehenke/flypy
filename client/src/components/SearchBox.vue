@@ -13,7 +13,6 @@
                     <input type="text" v-model="flightSearchForm.departure" placeholder="Departure city or airport" class="rounded-l-lg px-4 py-4">           
                     <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination city or airport">
                     <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
-                    <!-- <input type="date" v-model="flightSearchForm.returnDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Return date"> -->
                     <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); toggleBodyContent();">Search!</button>
                 </form> 
             </div>
@@ -64,7 +63,6 @@ export default {
                 departure: '',
                 destination: '',
                 departureDate: '',
-                // returnDate: '',
             },
             searchResults: null,
             itineraries: {},
@@ -103,10 +101,9 @@ export default {
         },
         handleSearchSubmit() {
             const payload = {
-                departure: this.flightSearchForm.departure,
-                destination: this.flightSearchForm.destination,
+                departure: this.flightSearchForm.departure.toUpperCase(),
+                destination: this.flightSearchForm.destination.toUpperCase(),
                 departureDate: this.flightSearchForm.departureDate,
-                // returnDate: this.flightSearchForm.returnDate,
             };
             this.addSearchData(payload);
         },
@@ -155,7 +152,7 @@ export default {
             setTimeout(() => {
                 this.showPicture = false;
                 this.showResults = true;
-            }, 500);
+            }, 1000);
         }
     }
 };

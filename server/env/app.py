@@ -23,7 +23,6 @@ def get_search():
             'departure': post_data.get('departure'),
             'destination': post_data.get('destination'),
             'departureDate': post_data.get('departureDate'),
-            # 'returnDate': post_data.get('returnDate')
         })
     else:
         flightSearchForm = []
@@ -31,7 +30,6 @@ def get_search():
             'departure': post_data.get('departure'),
             'destination': post_data.get('destination'),
             'departureDate': post_data.get('departureDate'),
-            # 'returnDate': post_data.get('returnDate')
         })
     app.logger.debug("flightSearchForm: %s", flightSearchForm) 
     return jsonify(flightSearchForm)
