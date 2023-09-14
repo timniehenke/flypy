@@ -65,7 +65,6 @@ export default {
                 destination: '',
                 departureDate: '',
             },
-            searchResults: null,
             itineraries: {},
             legs: {},
             carriers: {},
@@ -81,24 +80,11 @@ export default {
             axios.post(path, payload)
                 .then((res) => {
                     console.log('THIS WORKED');
-                    this.getSearchData();
                 })
                 .catch((error) => {
                     console.log('THERE WAS AN ERROR');
-                    this.getSearchData();
                 });
             },
-        getSearchData() {
-            console.log('trying to get searchData')
-            const path = 'http://localhost:5000/search';
-            axios.get(path)
-                .then((res) => {
-                this.searchResults = res.data;
-                })
-                .catch((error) => {
-                console.error(error);
-                });
-        },
         handleSearchSubmit() {
             const payload = {
                 departure: this.flightSearchForm.departure.toUpperCase(),
