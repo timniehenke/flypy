@@ -14,12 +14,20 @@
                     <input type="text" v-model="flightSearchForm.departure" placeholder="Departure airport (IATA)" class="rounded-l-lg px-4 py-4" maxlength="3">           
                     <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination airport (IATA)" maxlength="3">
                     <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
-                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); toggleBodyContent();">Search!</button>
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); checkResults();">Search!</button>
                 </form> 
             </div>
             <br>
             <p class="text-center text-xs text-white">Please enter the Departure & Destination Airport as IATA Code, e.g. DUS (Düsseldorf). <br> IATA Codes are 3-letter-codes used to identify airports. A list can be found <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank">here</a>. </p>
             <br>
+        </div>
+
+        <div v-if="showErrorWarning" class="bg-red-100 border border-red-400 text-red-700 text-center px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Warning! </strong>
+            <span class="block sm:inline">The request took to long or your input was invalid. Please check the input and your terminal for the GET request. Then press "Search" again!</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="showErrorWarning=false"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+            </span>
         </div>
 
         <table v-if="showResults" class="min-w-full divide-y divide-gray-200">
@@ -71,6 +79,7 @@ export default {
             formattedDate: '',
             showPicture: true,
             showResults: false,
+            showErrorWarning: false,
         }
     },
     methods: {
@@ -141,9 +150,19 @@ export default {
             window.open(link, '_blank');
         },
         toggleBodyContent() {
+            this.showPicture = false;
+            this.showResults = true;
+        },
+        checkResults() {
             setTimeout(() => {
-                this.showPicture = false;
-                this.showResults = true;
+                if(Object.keys(this.itineraries).length === 0) {
+                    console.log('Seems like there was a wrong input');
+                    this.showErrorWarning = true;
+                }
+                else {
+                    this.showErrorWarning = false;
+                    this.toggleBodyContent();
+                }
             }, 1000);
         }
     }
