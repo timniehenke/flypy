@@ -80,14 +80,16 @@ export default {
             const path = 'http://localhost:5000/search';
             axios.post(path, payload)
                 .then((res) => {
+                    console.log('THIS WORKED');
                     this.getSearchData();
                 })
                 .catch((error) => {
-                    console.error(error);
+                    console.log('THERE WAS AN ERROR');
                     this.getSearchData();
                 });
             },
         getSearchData() {
+            console.log('trying to get searchData')
             const path = 'http://localhost:5000/search';
             axios.get(path)
                 .then((res) => {
