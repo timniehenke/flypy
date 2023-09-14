@@ -39,7 +39,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ carriers[legs[itineraryId].operatingCarrierIds[0]].name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].departureDateTime)}}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ formatDatetimeFromObject(legs[itineraryId].arrivalDateTime) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].durationInMinutes }} mins</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ formatDuration(legs[itineraryId].durationInMinutes) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ legs[itineraryId].stopCount }}</td>
                     <td class="px-6 py-4 whitespace-nowrap font-semibold">{{ (itinerary.pricingOptions[0].price.amount / 1000).toFixed(2) }} EUR</td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -107,7 +107,6 @@ export default {
                     });
             }, 500);
         },
-        
         formatDatetimeFromObject(dateObject) {
             try {
                 const year = dateObject.year;
@@ -128,11 +127,19 @@ export default {
                 return null;
             }
         },
+        formatDuration(durationInMinutes) {
+            const hours = Math.floor(durationInMinutes / 60);
+            const minutes = durationInMinutes % 60;
 
+            if (hours === 0) {
+                return `${minutes}m`;
+            } else {
+                return `${hours}h ${minutes}m`;
+            }
+        },
         openLink(link) {
             window.open(link, '_blank');
         },
-
         toggleBodyContent() {
             setTimeout(() => {
                 this.showPicture = false;
