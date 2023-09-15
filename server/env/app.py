@@ -15,7 +15,7 @@ def ping_pong():
     return jsonify('pong!')
 
 
-@app.route('/search',methods=['GET'])
+@app.route('/',methods=['GET'])
 def get_search():
     return data({
         'departure': request.args.get('from'),

@@ -11,7 +11,7 @@ const router = createRouter({
       component: Ping
     },
     {
-      path: '/search',
+      path: '/',
       name: 'search',
       component: SearchBox
     }

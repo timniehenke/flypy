@@ -93,7 +93,7 @@ export default {
                 departureDate: this.flightSearchForm.departureDate,
             };
             
-            const path = `http://localhost:5000/search?from=${payload.departure}&to=${payload.destination}&date=${payload.departureDate}`;
+            const path = `http://localhost:5000/?from=${payload.departure}&to=${payload.destination}&date=${payload.departureDate}`;
 
             axios.get(path)
                 .then((response) => {
