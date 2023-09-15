@@ -4,7 +4,7 @@ url = "https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/cr
 
 def data(flightSearchForm: dict) -> dict:
 
-	departure_date_parts = flightSearchForm[0]["departureDate"].split('-')
+	departure_date_parts = flightSearchForm["departureDate"].split('-')
 	year = int(departure_date_parts[0])
 	month = int(departure_date_parts[1])
 	day = int(departure_date_parts[2])
@@ -17,8 +17,8 @@ def data(flightSearchForm: dict) -> dict:
 			"preferDirects": "true",
 			"queryLegs": [
 				{
-					"originPlaceId": { "iata": flightSearchForm[0]["departure"] },
-					"destinationPlaceId": { "iata": flightSearchForm[0]["destination"] },
+					"originPlaceId": { "iata": flightSearchForm["departure"] },
+					"destinationPlaceId": { "iata": flightSearchForm["destination"] },
 					"date": {
 						 "year": year,
 						"month": month,

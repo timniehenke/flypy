@@ -14,7 +14,7 @@
                     <input type="text" v-model="flightSearchForm.departure" placeholder="Departure airport (IATA)" class="rounded-l-lg px-4 py-4" maxlength="3">           
                     <input type="text" v-model="flightSearchForm.destination" class="px-4 py-4 ml-2" placeholder="Destination airport (IATA)" maxlength="3">
                     <input type="date" v-model="flightSearchForm.departureDate" class="rounded-r-lg px-4 py-4 ml-2" placeholder="Departure date">
-                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="handleSearchSubmit(); getResults(); checkResults();">Search!</button>
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg ml-4" @click="getResults(); checkResults();">Search!</button>
                 </form> 
             </div>
             <br>
@@ -64,6 +64,7 @@
 
 <script>
 import axios from 'axios';
+import formatDurationX from '../utils/formatDuration.js'
 
 export default {
     data() {
@@ -83,39 +84,27 @@ export default {
         }
     },
     methods: {
-        addSearchData(payload) {
-            console.log(payload)
-            const path = 'http://localhost:5000/search';
-            axios.post(path, payload)
-                .then((res) => {
-                    console.log('THIS WORKED');
-                })
-                .catch((error) => {
-                    console.log('THERE WAS AN ERROR');
-                });
-            },
-        handleSearchSubmit() {
+        formatDuration: formatDurationX,
+        
+        getResults() {
             const payload = {
                 departure: this.flightSearchForm.departure.toUpperCase(),
                 destination: this.flightSearchForm.destination.toUpperCase(),
                 departureDate: this.flightSearchForm.departureDate,
             };
-            this.addSearchData(payload);
+            const path = `http://localhost:5000/search?from=${payload.departure}&to=${payload.destination}&date=${payload.departureDate}`;
+
+            axios.get(path)
+                .then((response) => {
+                    this.itineraries = response.data.content.results.itineraries;
+                    this.legs = response.data.content.results.legs;
+                    this.carriers = response.data.content.results.carriers;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         },
-        getResults() {
-            setTimeout(() => {
-                const path = 'http://localhost:5000/results';
-                axios.get(path)
-                    .then((response) => {
-                        this.itineraries = response.data.content.results.itineraries;
-                        this.legs = response.data.content.results.legs;
-                        this.carriers = response.data.content.results.carriers;
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            }, 500);
-        },
+
         formatDatetimeFromObject(dateObject) {
             try {
                 const year = dateObject.year;
@@ -136,16 +125,7 @@ export default {
                 return null;
             }
         },
-        formatDuration(durationInMinutes) {
-            const hours = Math.floor(durationInMinutes / 60);
-            const minutes = durationInMinutes % 60;
-
-            if (hours === 0) {
-                return `${minutes}m`;
-            } else {
-                return `${hours}h ${minutes}m`;
-            }
-        },
+   
         openLink(link) {
             window.open(link, '_blank');
         },
