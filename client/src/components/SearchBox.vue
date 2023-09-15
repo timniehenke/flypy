@@ -85,13 +85,14 @@ export default {
     },
     methods: {
         formatDuration: formatDurationX,
-        
+
         getResults() {
             const payload = {
                 departure: this.flightSearchForm.departure.toUpperCase(),
                 destination: this.flightSearchForm.destination.toUpperCase(),
                 departureDate: this.flightSearchForm.departureDate,
             };
+            
             const path = `http://localhost:5000/search?from=${payload.departure}&to=${payload.destination}&date=${payload.departureDate}`;
 
             axios.get(path)
@@ -101,7 +102,9 @@ export default {
                     this.carriers = response.data.content.results.carriers;
                 })
                 .catch((error) => {
-                    console.error(error);
+                    this.itineraries = {};
+                    this.legs = {};
+                    this.carriers = {};
                 });
         },
 
@@ -135,9 +138,9 @@ export default {
         },
         checkResults() {
             setTimeout(() => {
-                if(Object.keys(this.itineraries).length === 0) {
-                    console.log('Seems like there was a wrong input');
+                if( ! Object.keys(this.itineraries).length) {
                     this.showErrorWarning = true;
+                    this.showResults = false;
                 }
                 else {
                     this.showErrorWarning = false;
